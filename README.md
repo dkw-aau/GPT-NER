@@ -8,8 +8,10 @@ This repo contains code for the paper [GPT-NER: Named Entity Recognition via Lar
   author={Wang, Shuhe and Sun, Xiaofei and Li, Xiaoya and Ouyang, Rongbin and Wu, Fei and Zhang, Tianwei and Li, Jiwei and Wang, Guoyin},
   journal={arXiv preprint arXiv:2304.10428},
   year={2023}
-}
+} 
 ```
+Some changes have been made to this repository to adapt it for the WIP course at Aalborg University. 
+See comments starting with `[WIP]` for the changes. 
 
 ## Usage
 
@@ -19,12 +21,16 @@ This repo contains code for the paper [GPT-NER: Named Entity Recognition via Lar
 * openai==0.27.2
 * simcse==0.4
 
-This repor mainly use two addtional packages: [SimCSE](https://github.com/princeton-nlp/SimCSE) and [OpenAI](https://github.com/openai/openai-python). So, if you want to know more about the arguments used in codes, please refer to the corresponding documents.
+[WIP] There is a requirements.txt file now, you can install the required packages by running `pip install -r requirements.txt`.
+
+This repo mainly uses two addtional packages: [SimCSE](https://github.com/princeton-nlp/SimCSE) and [OpenAI](https://github.com/openai/openai-python). So, if you want to know more about the arguments used in codes, please refer to the corresponding documents.
 
 ### Proposed Dataset
 For the full NER dataset, we follow [MRC-NER](https://arxiv.org/pdf/1910.11476.pdf) for preprocessing, and you can directly download these [here](https://github.com/ShannonAI/mrc-for-flat-nested-ner).
 
 For sampled **100-dataset**, we have put them on the [Google Drive](https://drive.google.com/drive/folders/1ByoM4Bb_BRmvp_D28QGRxrxfxnQtYeQi?usp=share_link).
+
+[WIP] The sampled 100-dataset is now included in the `data` folder, and you can directly use it for testing.
 
 ### Few-shot Demonstrations Retrieval
 For sentence-level embeddings, run `openai_access/extract_mrc_knn.py`.
