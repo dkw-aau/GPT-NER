@@ -1,0 +1,33 @@
+# LLM provider configuration for GPT-NER
+# Change 'provider' and 'model' to switch LLM backends without modifying any Python files.
+#
+# Supported providers:
+#   openai        – requires OPENAI_API_KEY env var
+#   anthropic     – requires ANTHROPIC_API_KEY env var
+#   huggingface   – requires HF_TOKEN env var (optional for public models)
+
+provider: openai
+model: text-davinci-003
+
+# Generation parameters
+temperature: 0.0
+max_tokens: 512
+top_p: 1
+frequency_penalty: 0
+presence_penalty: 0
+
+# OpenAI-specific (ignored by other providers)
+openai:
+  best_of: 1
+  # Uncomment to use Azure OpenAI instead of api.openai.com
+  # api_base: "https://<your-resource>.openai.azure.com/"
+  # api_type: azure
+  # api_version: "2024-02-01"
+
+# Anthropic-specific (ignored by other providers)
+anthropic: {}
+
+# HuggingFace-specific (ignored by other providers)
+huggingface:
+  # endpoint_url: "https://api-inference.huggingface.co"  # default
+  # task: text-generation                                  # default
