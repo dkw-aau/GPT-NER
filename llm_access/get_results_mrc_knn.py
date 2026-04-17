@@ -22,7 +22,7 @@ def get_parser():
     parser.add_argument("--data-name", type=str, help="dataset name for the input")
     parser.add_argument("--example-dir", type=str, default="None", help="directory for the example")
     parser.add_argument("--example-name", type=str, default="None", help="file name for the example")
-    parser.add_argument("--example-num", type=int, default=16, help="numebr for examples")
+    parser.add_argument("--example-num", type=int, default=16, help="number of examples")
     parser.add_argument("--last-results", type=str, default="None", help="unfinished file")
     parser.add_argument("--write-dir", type=str, help="directory for the output")
     parser.add_argument("--write-name", type=str, help="file name for the output")

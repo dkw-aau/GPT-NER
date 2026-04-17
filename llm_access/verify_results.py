@@ -27,7 +27,7 @@ def get_parser():
     parser.add_argument("--knn-file", default="None", type=str, help="knn file for the input")
     parser.add_argument("--write-dir", type=str, help="directory for the output")
     parser.add_argument("--write-name", type=str, help="file name for the output")
-    parser.add_argument("--knn-num", type=int, default=1, help="numebr for the knn")
+    parser.add_argument("--knn-num", type=int, default=1, help="number for the knn")
     parser.add_argument("--config", type=str, default="config.yaml",
                         help="path to the LLM provider config file (default: config.yaml)")
     
