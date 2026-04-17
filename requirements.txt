@@ -1,5 +1,6 @@
 openai==0.27.2
-simcse==0.4
+# simcse==0.4 must be installed separately with --no-deps to avoid its
+# incompatible scipy/numpy constraints (see README for instructions).
 faiss-cpu
 numpy
 scikit-learn
@@ -7,3 +8,4 @@ torch
 tqdm
 text2vec
 python-json-logger
+transformers

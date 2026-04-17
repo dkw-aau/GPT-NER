@@ -21,7 +21,14 @@ See comments starting with `[WIP]` for the changes.
 * openai==0.27.2
 * simcse==0.4
 
-[WIP] There is a requirements.txt file now, you can install the required packages by running `pip install -r requirements.txt`.
+[WIP] Due to incompatible legacy dependency constraints in the `simcse` package (it pins `scipy<1.6` and `numpy<1.20`, which cannot be built on Python 3.8+ or Windows), install in two steps:
+
+```bash
+pip install simcse==0.4 --no-deps
+pip install -r requirements.txt
+```
+
+The `--no-deps` flag skips simcse's outdated scipy/numpy constraints; its runtime code does not actually use scipy.
 
 This repo mainly uses two addtional packages: [SimCSE](https://github.com/princeton-nlp/SimCSE) and [OpenAI](https://github.com/openai/openai-python). So, if you want to know more about the arguments used in codes, please refer to the corresponding documents.
 
