@@ -49,7 +49,7 @@ pip install -r requirements.txt
 
 This removes the stale numpy/scipy version pins from simcse's dist-info, so the subsequent `requirements.txt` install completes without any dependency-conflict errors.
 
-This repo mainly uses two addtional packages: [SimCSE](https://github.com/princeton-nlp/SimCSE) and [OpenAI](https://github.com/openai/openai-python). So, if you want to know more about the arguments used in codes, please refer to the corresponding documents.
+This repo mainly uses two additional packages: [SimCSE](https://github.com/princeton-nlp/SimCSE) and [OpenAI](https://github.com/openai/openai-python). So, if you want to know more about the arguments used in codes, please refer to the corresponding documents.
 
 ### Proposed Dataset
 For the full NER dataset, we follow [MRC-NER](https://arxiv.org/pdf/1910.11476.pdf) for preprocessing, and you can directly download these [here](https://github.com/ShannonAI/mrc-for-flat-nested-ner).
