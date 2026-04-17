@@ -21,14 +21,33 @@ See comments starting with `[WIP]` for the changes.
 * openai==0.27.2
 * simcse==0.4
 
-[WIP] Due to incompatible legacy dependency constraints in the `simcse` package (it pins `scipy<1.6` and `numpy<1.20`, which cannot be built on Python 3.8+ or Windows), install in two steps:
+[WIP] `simcse 0.4` declares `numpy<1.20` and `scipy<1.6` in its package metadata, but its runtime code does not actually require those old versions. Installing it with `--no-deps` avoids pulling in the stale dependencies, but pip's resolver will still report an ERROR when it later sees the installed simcse metadata conflict with the modern numpy/scipy installed from `requirements.txt`.
+
+The fix is to patch the metadata right after the `--no-deps` install:
 
 ```bash
 pip install simcse==0.4 --no-deps
+
+python - <<'EOF'
+import importlib.metadata, pathlib, re
+dist = importlib.metadata.distribution("simcse")
+meta_file = next(f for f in dist.files if f.name == "METADATA")
+meta_path = pathlib.Path(str(dist.locate_file(meta_file)))
+content = meta_path.read_text()
+patched = re.sub(
+    r"^Requires-Dist: (numpy|scipy)[^\n]*\n",
+    "",
+    content,
+    flags=re.MULTILINE,
+)
+meta_path.write_text(patched)
+print("Patched simcse metadata – removed conflicting numpy/scipy constraints")
+EOF
+
 pip install -r requirements.txt
 ```
 
-The `--no-deps` flag skips simcse's outdated scipy/numpy constraints; its runtime code does not actually use scipy.
+This removes the stale numpy/scipy version pins from simcse's dist-info, so the subsequent `requirements.txt` install completes without any dependency-conflict errors.
 
 This repo mainly uses two addtional packages: [SimCSE](https://github.com/princeton-nlp/SimCSE) and [OpenAI](https://github.com/openai/openai-python). So, if you want to know more about the arguments used in codes, please refer to the corresponding documents.
 

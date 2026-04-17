@@ -1,0 +1,58 @@
+name: "Copilot Setup Steps"
+
+# Run automatically when this file changes (for easy validation),
+# and allow manual runs from the Actions tab.
+on:
+    workflow_dispatch:
+    push:
+        paths:
+            - .github/workflows/copilot-setup-steps.yml
+    pull_request:
+        paths:
+            - .github/workflows/copilot-setup-steps.yml
+
+jobs:
+    # The job MUST be called `copilot-setup-steps` to be picked up by Copilot.
+    copilot-setup-steps:
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: read
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.10"
+                  cache: "pip"
+
+            - name: Install dependencies
+              run: |
+                  # simcse 0.4 declares numpy<1.20 and scipy<1.6 in its metadata, but its
+                  # runtime code does not actually require those old versions.  Installing it
+                  # with --no-deps prevents those outdated pins from being installed, but pip's
+                  # resolver would still see the conflict and report ERRORs when requirements.txt
+                  # is installed afterwards.  We therefore patch the dist-info METADATA to remove
+                  # those two stale constraints before installing the rest of the project.
+                  pip install simcse==0.4 --no-deps
+
+                  python - <<'EOF'
+                  import importlib.metadata, pathlib, re
+                  dist = importlib.metadata.distribution("simcse")
+                  meta_file = next(f for f in dist.files if f.name == "METADATA")
+                  meta_path = pathlib.Path(str(dist.locate_file(meta_file)))
+                  content = meta_path.read_text()
+                  patched = re.sub(
+                      r"^Requires-Dist: (numpy|scipy)[^\n]*\n",
+                      "",
+                      content,
+                      flags=re.MULTILINE,
+                  )
+                  meta_path.write_text(patched)
+                  print("Patched simcse metadata – removed conflicting numpy/scipy constraints")
+                  EOF
+
+                  pip install -r requirements.txt
