@@ -51,6 +51,7 @@ This removes the stale numpy/scipy version pins from simcse's dist-info, so the 
 
 This repo mainly uses two additional packages: [SimCSE](https://github.com/princeton-nlp/SimCSE) and [OpenAI](https://github.com/openai/openai-python). So, if you want to know more about the arguments used in codes, please refer to the corresponding documents.
 
+[/WIP]
 ### Proposed Dataset
 For the full NER dataset, we follow [MRC-NER](https://arxiv.org/pdf/1910.11476.pdf) for preprocessing, and you can directly download these [here](https://github.com/ShannonAI/mrc-for-flat-nested-ner).
 
@@ -187,7 +188,7 @@ python llm_access/get_results_mrc_knn.py \
     --example-num 8 \
     --write-dir   results \
     --write-name  conll_hf_predictions.txt \
-    --config      config.huggingface.yaml
+    --config      config.hf.yaml
 ```
 
 > **Note:** The HuggingFace Inference API rejects a temperature of exactly `0.0`; the provider automatically clamps it to `0.01`. If you want fully deterministic output, set `temperature: 0.0` in the config — the clamp is applied transparently.
