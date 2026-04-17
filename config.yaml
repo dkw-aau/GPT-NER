@@ -25,9 +25,11 @@ openai:
   # api_version: "2024-02-01"
 
 # Anthropic-specific (ignored by other providers)
+# Example models: claude-3-5-sonnet-20241022, claude-3-opus-20240229
 anthropic: {}
 
 # HuggingFace-specific (ignored by other providers)
+# Example models: mistralai/Mistral-7B-Instruct-v0.2, meta-llama/Meta-Llama-3-8B-Instruct
 huggingface:
   # endpoint_url: "https://api-inference.huggingface.co"  # default
   # task: text-generation                                  # default
