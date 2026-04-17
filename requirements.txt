@@ -1,4 +1,5 @@
-openai==0.27.2
+# Core dependencies
+pyyaml
 # simcse==0.4 must be installed separately with --no-deps to avoid its
 # incompatible scipy/numpy constraints (see README for instructions).
 faiss-cpu
@@ -8,4 +9,15 @@ torch
 tqdm
 text2vec
 python-json-logger
-transformers
+
+# LLM provider dependencies – install only the one(s) you need
+#
+# OpenAI (legacy <=0.28 or modern >=1.0 both supported):
+#   pip install "openai>=0.27.2"
+# Anthropic:
+#   pip install anthropic
+# HuggingFace Inference API:
+#   pip install huggingface_hub
+
+# Default: include the legacy OpenAI SDK so existing users are unaffected
+openai>=0.27.2
