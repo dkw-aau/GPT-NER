@@ -3,6 +3,7 @@
 
 # Logs
 logs/*
+!logs/.gitkeep
 
 #
 experiments/*
