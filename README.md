@@ -73,6 +73,125 @@ For self-verification, please run `openai_access/scripts/verify.sh`, and the use
 
 **Note that accessing to the `GPT-3` is very expensive, we thus strongly advise you to start from our sampled 100-dataset.**
 
+### [WIP] LLM-Agnostic Access
+
+The `llm_access/get_results_mrc_knn.py` script supports OpenAI, Anthropic, and HuggingFace backends through a unified interface controlled by `config.yaml`.  The `--config` argument lets you point the script at any config file, so you can keep separate configs per provider without editing the default.
+
+The script arguments are:
+
+| Argument | Description |
+|---|---|
+| `--source-dir` | Directory containing the MRC test file (`mrc-ner.<source-name>`) |
+| `--source-name` | Filename suffix for the test split (e.g. `test`) |
+| `--train-name` | Filename suffix for the training split used to build few-shot prompts |
+| `--data-name` | Dataset identifier (e.g. `CONLL`, `ONTONOTES`) |
+| `--example-dir` | Directory containing the KNN index file (`<example-name>.knn.jsonl`) |
+| `--example-name` | Filename prefix for the KNN index |
+| `--example-num` | Number of few-shot examples per prompt (default: `16`) |
+| `--write-dir` | Directory for the output predictions file |
+| `--write-name` | Filename for the output predictions file |
+| `--last-results` | Path to a previous (incomplete) results file to resume from |
+| `--config` | Path to the YAML config file (default: `config.yaml`) |
+
+#### Example 1 – OpenAI (`gpt-3.5-turbo-instruct`)
+
+Set `config.yaml` (or a copy) to use the OpenAI provider:
+
+```yaml
+provider: openai
+model: gpt-3.5-turbo-instruct
+temperature: 0.0
+max_tokens: 512
+top_p: 1
+frequency_penalty: 0
+presence_penalty: 0
+openai:
+  best_of: 1
+```
+
+Export your API key and run the script:
+
+```bash
+export OPENAI_API_KEY="YOUR_OPENAI_KEY"
+
+python llm_access/get_results_mrc_knn.py \
+    --source-dir  data/conll_mrc \
+    --source-name test \
+    --train-name  train \
+    --data-name   CONLL \
+    --example-dir data/conll_mrc \
+    --example-name test.simcse.32 \
+    --example-num 8 \
+    --write-dir   results \
+    --write-name  conll_openai_predictions.txt \
+    --config      config.yaml
+```
+
+#### Example 2 – Anthropic (`claude-3-5-sonnet-20241022`)
+
+Create `config.anthropic.yaml` (or edit `config.yaml`) to use the Anthropic provider:
+
+```yaml
+provider: anthropic
+model: claude-3-5-sonnet-20241022
+temperature: 0.0
+max_tokens: 512
+top_p: 1
+anthropic: {}
+```
+
+Export your API key and run the script:
+
+```bash
+export ANTHROPIC_API_KEY="YOUR_ANTHROPIC_KEY"
+
+python llm_access/get_results_mrc_knn.py \
+    --source-dir  data/conll_mrc \
+    --source-name test \
+    --train-name  train \
+    --data-name   CONLL \
+    --example-dir data/conll_mrc \
+    --example-name test.simcse.32 \
+    --example-num 8 \
+    --write-dir   results \
+    --write-name  conll_anthropic_predictions.txt \
+    --config      config.anthropic.yaml
+```
+
+#### Example 3 – HuggingFace (`mistralai/Mistral-7B-Instruct-v0.2`)
+
+Create `config.huggingface.yaml` (or edit `config.yaml`) to use the HuggingFace provider:
+
+```yaml
+provider: huggingface
+model: mistralai/Mistral-7B-Instruct-v0.2
+temperature: 0.1
+max_tokens: 512
+top_p: 1
+huggingface:
+  task: text-generation
+```
+
+Export your HuggingFace token (required for gated models; optional for public ones) and run the script:
+
+```bash
+export HF_TOKEN="YOUR_HF_TOKEN"   # optional for public models
+
+python llm_access/get_results_mrc_knn.py \
+    --source-dir  data/conll_mrc \
+    --source-name test \
+    --train-name  train \
+    --data-name   CONLL \
+    --example-dir data/conll_mrc \
+    --example-name test.simcse.32 \
+    --example-num 8 \
+    --write-dir   results \
+    --write-name  conll_hf_predictions.txt \
+    --config      config.huggingface.yaml
+```
+
+> **Note:** The HuggingFace Inference API rejects a temperature of exactly `0.0`; the provider automatically clamps it to `0.01`. If you want fully deterministic output, set `temperature: 0.0` in the config — the clamp is applied transparently.
+
 ### Evaluate
 
 We use span-level precession, recall and F1-score for evaluation, and to do this, please run the script `openai_access/scripts/compute_f1.sh`.
