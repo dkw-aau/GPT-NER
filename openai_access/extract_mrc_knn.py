@@ -40,7 +40,6 @@ def compute_mrc_knn(test_info, test_features, train_info, train_features, train_
     index.add(train_features.astype(np.float32))
     # 10 is a default setting in simcse
     index.nprobe = min(10, train_info["entity_num"])
-    index = faiss.index_gpu_to_cpu(index)
 
     top_value, top_index = index.search(test_features.astype(np.float32), knn_num)
 
@@ -87,7 +86,6 @@ def compute_simcse_knn(test_mrc_data, train_mrc_data, knn_num, test_index=None,
         index.add(embeddings.astype(np.float32))
         # 10 is a default setting in simcse
         index.nprobe = min(10, len(train_sentence[key]))
-        index = faiss.index_gpu_to_cpu(index)
 
         train_index[key] = index
 
