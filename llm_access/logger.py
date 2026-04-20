@@ -22,11 +22,11 @@ logging.basicConfig(
     level="INFO",
     handlers=[readable_log_handler, file_handler]
 )
-logging.info("获取logger")
+logging.info("logger")
 
 
 def get_logger(name: str):
     """get sub-loggers"""
-    print(f"获取logger: {name}")
+    print(f"logger: {name}")
     logger = logging.getLogger(name)
     return logger
