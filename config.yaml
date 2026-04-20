@@ -32,4 +32,5 @@ anthropic: {}
 # Example models: mistralai/Mistral-7B-Instruct-v0.2, meta-llama/Meta-Llama-3-8B-Instruct
 huggingface:
   # endpoint_url: "https://api-inference.huggingface.co"  # default
-  # task: text-generation                                  # default
+  # task: conversational   # use for instruction/chat models (e.g. Mistral-Instruct, Llama-Instruct)
+  # task: text-generation  # use for base (non-instruction) models
