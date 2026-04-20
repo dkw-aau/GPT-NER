@@ -9,7 +9,7 @@ from pythonjsonlogger import jsonlogger
 
 os.makedirs("./logs", exist_ok=True)
 
-readable_log_handler = logging.StreamHandler()  # pylint: disable=C0103
+readable_log_handler = logging.StreamHandler(stream=open(1, "w", encoding="utf-8", closefd=False))  # pylint: disable=C0103
 readable_log_handler.setFormatter(
     logging.Formatter("%(asctime)-15s %(levelname)-8s %(message)s %(pathname)s")
 )
