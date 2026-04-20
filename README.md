@@ -62,7 +62,30 @@ For sampled **100-dataset**, we have put them on the [Google Drive](https://driv
 ### Few-shot Demonstrations Retrieval
 For sentence-level embeddings, run `openai_access/extract_mrc_knn.py`.
 
-Note that you should change the directory for the input/output file and the used SimCSE model. In this repo, the model `sup-simcse-roberta-large` is used for SimCSE, and you can find it [here](https://huggingface.co/princeton-nlp/sup-simcse-roberta-large).
+The script downloads `princeton-nlp/sup-simcse-roberta-large` from HuggingFace automatically on first use (no manual download required). You can override the model with `--model-name`.
+
+Example for the CoNLL dataset:
+
+```bash
+python openai_access/extract_mrc_knn.py \
+    --source-dir data/conll_mrc \
+    --test-name  test \
+    --train-name train \
+    --output     data/conll_mrc/test.simcse.32.knn.jsonl \
+    --knn-num    32
+```
+
+Pass `--model-name <name-or-path>` to use a different SimCSE model or a locally downloaded copy, e.g.:
+
+```bash
+python openai_access/extract_mrc_knn.py \
+    --source-dir data/conll_mrc \
+    --test-name  test \
+    --train-name train \
+    --output     data/conll_mrc/test.simcse.32.knn.jsonl \
+    --knn-num    32 \
+    --model-name princeton-nlp/sup-simcse-roberta-large
+```
 
 ### OpenAI Access
 

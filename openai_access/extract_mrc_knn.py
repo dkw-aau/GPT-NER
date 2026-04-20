@@ -1,4 +1,5 @@
 from simcse import SimCSE
+import argparse
 import json
 import numpy as np
 import os
@@ -57,8 +58,9 @@ def compute_mrc_knn(test_info, test_features, train_info, train_features, train_
 
     return example_idx, example_value
 
-def compute_simcse_knn(test_mrc_data, train_mrc_data, knn_num, test_index=None):
-    sim_model = SimCSE("/data2/wangshuhe/gpt3_ner/models/sup-simcse-roberta-large")
+def compute_simcse_knn(test_mrc_data, train_mrc_data, knn_num, test_index=None,
+                       model_name="princeton-nlp/sup-simcse-roberta-large"):
+    sim_model = SimCSE(model_name)
 
     train_sentence = {}
     train_sentence_index = {}
@@ -173,62 +175,28 @@ def write_file(dir_, data):
     file.close()
 
 if __name__ == '__main__':
-    # test_info, test_features, test_index = read_feature(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/conll_mrc/start_word_embedding", prefix="test.100")
-    # test_mrc_data = read_mrc_data(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/conll_mrc/", prefix="test")
-    # train_info, train_features, train_index = read_feature(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/conll_mrc/start_word_embedding", prefix="train.dev")
-    # train_mrc_data = read_mrc_data(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/conll_mrc/", prefix="train.dev")
-    # # test_info, test_features, test_index = read_feature(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/conll_mrc/start_word_embedding_sorted", prefix="test")
-    # # test_mrc_data = read_mrc_data(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/conll_mrc/", prefix="test")
-    # # train_info, train_features, train_index = read_feature(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/conll_mrc/start_word_embedding_sorted", prefix="train.dev.sorted")
-    # # train_mrc_data = read_mrc_data(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/conll_mrc/", prefix="train.dev.sorted")
+    parser = argparse.ArgumentParser(description='Compute SimCSE KNN for MRC data')
+    parser.add_argument('--source-dir', type=str, required=True,
+                        help='Directory containing the MRC data files')
+    parser.add_argument('--test-name', type=str, default='test',
+                        help='Filename suffix for the test split (default: test)')
+    parser.add_argument('--train-name', type=str, default='train',
+                        help='Filename suffix for the train split (default: train)')
+    parser.add_argument('--output', type=str, required=True,
+                        help='Path to write the output KNN index file (.jsonl)')
+    parser.add_argument('--knn-num', type=int, default=32,
+                        help='Number of nearest neighbours to retrieve (default: 32)')
+    parser.add_argument('--model-name', type=str,
+                        default='princeton-nlp/sup-simcse-roberta-large',
+                        help='SimCSE model name or local path')
+    args = parser.parse_args()
 
-    # mrc_knn_idx, mrc_knn_value = compute_mrc_knn(test_info=test_info, test_features=test_features, train_info=train_info, train_features=train_features, train_index=train_index, knn_num=32)
-    # simcse_knn_idx, simcse_knn_value = compute_simcse_knn(test_index=test_index, test_mrc_data=test_mrc_data, train_mrc_data=train_mrc_data, knn_num=32)
-
-    # combined_data = combine_full_knn(test_index=test_index, mrc_knn_index=mrc_knn_idx, simcse_knn_index=simcse_knn_idx)
-
-    # write_file(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/conll_mrc/start_word_embedding/test.100.full.knn.jsonl", data=combined_data)
-    # # write_file(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/conll_mrc/start_word_embedding_sorted/test.full.knn.jsonl", data=combined_data)
-
-
-    # test_info, test_features, test_index = read_feature(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/zh_onto4/start_word_embedding", prefix="test")
-    # test_mrc_data = read_mrc_data(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/zh_onto4/", prefix="test")
-    # train_info, train_features, train_index = read_feature(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/zh_onto4/start_word_embedding", prefix="train.dev")
-    # train_mrc_data = read_mrc_data(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/zh_onto4/", prefix="train.dev")
-
-    # mrc_knn_idx, mrc_knn_value = compute_mrc_knn(test_info=test_info, test_features=test_features, train_info=train_info, train_features=train_features, train_index=train_index, knn_num=32)
-    # text2vec_knn_idx = read_idx(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/zh_onto4", prefix="test.embedding")
-
-    # combined_data = combine_full_knn(test_index=test_index, mrc_knn_index=mrc_knn_idx, simcse_knn_index=text2vec_knn_idx)
-
-    # write_file(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/zh_onto4/start_word_embedding/test.mrc.knn.jsonl", data=combined_data)
-
-    # test_mrc_data = read_mrc_data(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/conll_mrc/low_resource", prefix="test")
-    # train_mrc_data = read_mrc_data(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/conll_mrc/low_resource", prefix="train.1")
-    # index_, value_ = compute_simcse_knn(test_mrc_data=test_mrc_data, train_mrc_data=train_mrc_data, knn_num=32)
-    # write_file(dir_="/nfs/shuhe/gpt3-ner/gpt3-data/conll_mrc/low_resource/low_resource_1_knn/test.simcse.knn.jsonl", data=index_)
-
-    # test_mrc_data = read_mrc_data(dir_="/data2/wangshuhe/gpt3_ner/gpt3-data/conll_mrc", prefix="test")
-    # train_mrc_data = read_mrc_data(dir_="/home/wangshuhe/gpt-ner/openai_access/low_resource_data/conll_en", prefix="train.8")
-    # index_, value_ = compute_simcse_knn(test_mrc_data=test_mrc_data, train_mrc_data=train_mrc_data, knn_num=32)
-    # write_file(dir_="/home/wangshuhe/gpt-ner/openai_access/low_resource_data/conll_en/test.8.embedding.knn.jsonl", data=index_)
-
-    # test_mrc_data = read_mrc_data(dir_="/data2/wangshuhe/gpt3_ner/gpt3-data/conll_mrc", prefix="test.100")
-    # train_mrc_data = read_mrc_data(dir_="/data2/wangshuhe/gpt3_ner/gpt3-data/conll_mrc", prefix="train.dev")
-    # index_, value_ = compute_simcse_knn(test_mrc_data=test_mrc_data, train_mrc_data=train_mrc_data, knn_num=32)
-    # write_file(dir_="/data2/wangshuhe/gpt3_ner/gpt3-data/conll_mrc/test.100.simcse.32.knn.jsonl", data=index_)
-
-    # test_mrc_data = read_mrc_data(dir_="/data2/wangshuhe/gpt3_ner/gpt3-data/conll_mrc/low_resource", prefix="test")
-    # train_mrc_data = read_mrc_data(dir_="/data2/wangshuhe/gpt3_ner/gpt3-data/conll_mrc/low_resource", prefix="train.10000")
-    # index_, value_ = compute_simcse_knn(test_mrc_data=test_mrc_data, train_mrc_data=train_mrc_data, knn_num=32)
-    # write_file(dir_="/data2/wangshuhe/gpt3_ner/gpt3-data/conll_mrc/low_resource/test.10000.simcse.32.knn.jsonl", data=index_)
-
-    # test_mrc_data = read_mrc_data(dir_="/data2/wangshuhe/gpt3_ner/gpt3-data/conll_mrc", prefix="test")
-    # train_mrc_data = read_mrc_data(dir_="/data2/wangshuhe/gpt3_ner/gpt3-data/conll_mrc", prefix="train.dev")
-    # index_, value_ = random_knn(test_mrc_data=test_mrc_data, train_mrc_data=train_mrc_data, knn_num=32)
-    # write_file(dir_="/data2/wangshuhe/gpt3_ner/gpt3-data/conll_mrc/test.random.32.knn.jsonl", data=index_)
-
-    test_mrc_data = read_mrc_data(dir_="/data2/wangshuhe/gpt3_ner/gpt3-data/ontonotes5_mrc", prefix="test.100")
-    train_mrc_data = read_mrc_data(dir_="/data2/wangshuhe/gpt3_ner/gpt3-data/ontonotes5_mrc", prefix="dev")
-    index_, value_ = compute_simcse_knn(test_mrc_data=test_mrc_data, train_mrc_data=train_mrc_data, knn_num=32)
-    write_file(dir_="/data2/wangshuhe/gpt3_ner/gpt3-data/ontonotes5_mrc/test.100.simcse.dev.32.knn.jsonl", data=index_)
+    test_mrc_data = read_mrc_data(dir_=args.source_dir, prefix=args.test_name)
+    train_mrc_data = read_mrc_data(dir_=args.source_dir, prefix=args.train_name)
+    index_, value_ = compute_simcse_knn(
+        test_mrc_data=test_mrc_data,
+        train_mrc_data=train_mrc_data,
+        knn_num=args.knn_num,
+        model_name=args.model_name,
+    )
+    write_file(dir_=args.output, data=index_)
