@@ -16,7 +16,7 @@ endpoint_url : str
     Inference API (``https://api-inference.huggingface.co``).
 task : str
     Inference task.  Use ``"conversational"`` for instruction/chat models
-    (e.g. ``mistralai/Mistral-7B-Instruct-v0.2``, ``meta-llama/Meta-Llama-3-8B-Instruct``).
+    (e.g. ``mistralai/Mistral-7B-Instruct-v0.3``, ``meta-llama/Meta-Llama-3-8B-Instruct``).
     Use ``"text-generation"`` for base (non-instruction) models.
     Defaults to ``"text-generation"``.
 """

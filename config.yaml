@@ -29,7 +29,7 @@ openai:
 anthropic: {}
 
 # HuggingFace-specific (ignored by other providers)
-# Example models: mistralai/Mistral-7B-Instruct-v0.2, meta-llama/Meta-Llama-3-8B-Instruct
+# Example models: mistralai/Mistral-7B-Instruct-v0.3, meta-llama/Meta-Llama-3-8B-Instruct
 huggingface:
   # endpoint_url: "https://api-inference.huggingface.co"  # default
   # task: conversational   # use for instruction/chat models (e.g. Mistral-Instruct, Llama-Instruct)
