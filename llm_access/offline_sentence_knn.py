@@ -104,6 +104,7 @@ def compute_score_text2vec(test_mrcdata, train_mrcdata, knn=32):
     return values, index
 
 def write_file(dir_, data):
+    os.makedirs(os.path.dirname(dir_), exist_ok=True)
     file = open(dir_, "w")
     for item in data:
         file.write(json.dumps(item, ensure_ascii=False)+'\n')
