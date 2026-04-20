@@ -186,13 +186,13 @@ python llm_access/get_results_mrc_knn.py \
     --config      config.anthropic.yaml
 ```
 
-#### Example 3 – HuggingFace (`mistralai/Mistral-7B-Instruct-v0.2`)
+#### Example 3 – HuggingFace (`mistralai/Mistral-7B-Instruct-v0.3`)
 
-Create `config.huggingface.yaml` (or edit `config.yaml`) to use the HuggingFace provider:
+Create `config.hf.yaml` (or edit `config.yaml`) to use the HuggingFace provider:
 
 ```yaml
 provider: huggingface
-model: mistralai/Mistral-7B-Instruct-v0.2
+model: mistralai/Mistral-7B-Instruct-v0.3
 temperature: 0.1
 max_tokens: 512
 top_p: 1
@@ -200,7 +200,7 @@ huggingface:
   task: conversational
 ```
 
-> **Note:** `mistralai/Mistral-7B-Instruct-v0.2` (and most modern instruction-tuned models) are routed through the `conversational` task on the HuggingFace Inference API. Using `task: text-generation` with such models will result in an error like *"Model … is not supported for task text-generation"*. Use `task: conversational` for instruction/chat models and `task: text-generation` only for base (non-instruction) models.
+> **Note:** `mistralai/Mistral-7B-Instruct-v0.2` has been removed from the HuggingFace Inference API. Use `mistralai/Mistral-7B-Instruct-v0.3` or another currently-supported model such as `meta-llama/Meta-Llama-3-8B-Instruct`. Most modern instruction-tuned models require `task: conversational`. Using `task: text-generation` with such models will result in a *"model not supported"* error. Use `task: text-generation` only for base (non-instruction) models.
 
 Export your HuggingFace token (required for gated models; optional for public ones) and run the script:
 

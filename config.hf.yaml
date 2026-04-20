@@ -1,0 +1,15 @@
+# HuggingFace provider configuration for GPT-NER
+# Export your HuggingFace token before running (required for gated models):
+#   export HF_TOKEN="YOUR_HF_TOKEN"
+#
+# Other supported instruction-tuned models:
+#   meta-llama/Meta-Llama-3-8B-Instruct
+
+provider: huggingface
+model: mistralai/Mistral-7B-Instruct-v0.3
+temperature: 0.1
+max_tokens: 512
+top_p: 1
+
+huggingface:
+  task: conversational
