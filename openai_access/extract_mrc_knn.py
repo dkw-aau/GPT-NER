@@ -1,5 +1,6 @@
 from simcse import SimCSE
 import argparse
+import huggingface_hub
 import json
 import numpy as np
 import os
@@ -58,7 +59,16 @@ def compute_mrc_knn(test_info, test_features, train_info, train_features, train_
     return example_idx, example_value
 
 def compute_simcse_knn(test_mrc_data, train_mrc_data, knn_num, test_index=None,
-                       model_name="princeton-nlp/sup-simcse-roberta-large"):
+                       model_name="princeton-nlp/sup-simcse-roberta-large",
+                       hf_token=None):
+    if hf_token:
+        try:
+            huggingface_hub.login(token=hf_token, add_to_git_credential=False)
+        except Exception as e:
+            raise RuntimeError(
+                f"HuggingFace Hub authentication failed: {e}. "
+                "Please verify your token or use the HF_TOKEN environment variable."
+            ) from e
     sim_model = SimCSE(model_name)
 
     train_sentence = {}
@@ -187,6 +197,10 @@ if __name__ == '__main__':
     parser.add_argument('--model-name', type=str,
                         default='princeton-nlp/sup-simcse-roberta-large',
                         help='SimCSE model name or local path')
+    parser.add_argument('--hf-token', type=str, default=None,
+                        help='HuggingFace Hub token for authenticated model downloads '
+                             '(prefer setting the HF_TOKEN environment variable instead '
+                             'to avoid exposing the token in shell history)')
     args = parser.parse_args()
 
     test_mrc_data = read_mrc_data(dir_=args.source_dir, prefix=args.test_name)
@@ -196,5 +210,6 @@ if __name__ == '__main__':
         train_mrc_data=train_mrc_data,
         knn_num=args.knn_num,
         model_name=args.model_name,
+        hf_token=args.hf_token,
     )
     write_file(dir_=args.output, data=index_)
