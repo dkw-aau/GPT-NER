@@ -41,7 +41,8 @@ def compute_mrc_knn(test_info, test_features, train_info, train_features, train_
     # 10 is a default setting in simcse
     index.nprobe = min(10, train_info["entity_num"])
 
-    top_value, top_index = index.search(test_features.astype(np.float32), knn_num)
+    actual_knn = min(knn_num, index.ntotal)
+    top_value, top_index = index.search(test_features.astype(np.float32), actual_knn)
 
     sum_ = 0
     vis_index = {}
@@ -97,8 +98,9 @@ def compute_simcse_knn(test_mrc_data, train_mrc_data, knn_num, test_index=None,
             context = test_mrc_data[idx_]["context"]
             label = test_mrc_data[idx_]["entity_label"]
 
+            actual_knn = min(knn_num, train_index[label].ntotal)
             embedding = sim_model.encode([context], batch_size=128, normalize_to_unit=True, keepdim=True, return_numpy=True)
-            top_value, top_index = train_index[label].search(embedding.astype(np.float32), knn_num)
+            top_value, top_index = train_index[label].search(embedding.astype(np.float32), actual_knn)
 
             example_idx.append([train_sentence_index[label][int(i)] for i in top_index[0]])
             example_value.append([float(value) for value in top_value[0]])
@@ -111,8 +113,9 @@ def compute_simcse_knn(test_mrc_data, train_mrc_data, knn_num, test_index=None,
         context = test_mrc_data[idx_]["context"]
         label = test_mrc_data[idx_]["entity_label"]
 
+        actual_knn = min(knn_num, train_index[label].ntotal)
         embedding = sim_model.encode([context], batch_size=128, normalize_to_unit=True, keepdim=True, return_numpy=True)
-        top_value, top_index = train_index[label].search(embedding.astype(np.float32), knn_num)
+        top_value, top_index = train_index[label].search(embedding.astype(np.float32), actual_knn)
 
         example_idx.append([train_sentence_index[label][int(i)] for i in top_index[0]])
         example_value.append([float(value) for value in top_value[0]])
