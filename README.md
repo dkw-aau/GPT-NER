@@ -68,7 +68,7 @@ Note that you should change the directory for the input/output file and the used
 
 We follow the official steps to access the GPT-* Models, and the document can be found [here](https://platform.openai.com/docs/api-reference/introduction). Before you run our scripts, you need to add **OPENAI_API_KEY**, which you can find it in your account profile, to the environment variable by the command `export OPENAI_API_KEY="YOUR_KEY"`.
 
-To get preditions, please run `openai_access/scripts/access_ai.sh`, and the used arguments are listed in file `openai_access/get_results_mrc_knn.py`.
+To get predictions, please run `openai_access/scripts/access_ai.sh`, and the used arguments are listed in file `openai_access/get_results_mrc_knn.py`.
 
 For self-verification, please run `openai_access/scripts/verify.sh`, and the used arguments are listed in file `openai_access/verify_results.py`.
 
