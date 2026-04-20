@@ -38,8 +38,6 @@ def compute_mrc_knn(test_info, test_features, train_info, train_features, train_
     quantizer = faiss.IndexFlatIP(train_info["hidden_size"])
     index = quantizer
     index.add(train_features.astype(np.float32))
-    # 10 is a default setting in simcse
-    index.nprobe = min(10, train_info["entity_num"])
 
     actual_knn = min(knn_num, index.ntotal)
     top_value, top_index = index.search(test_features.astype(np.float32), actual_knn)
@@ -85,8 +83,6 @@ def compute_simcse_knn(test_mrc_data, train_mrc_data, knn_num, test_index=None,
         quantizer = faiss.IndexFlatIP(embeddings.shape[1])
         index = quantizer
         index.add(embeddings.astype(np.float32))
-        # 10 is a default setting in simcse
-        index.nprobe = min(10, len(train_sentence[key]))
 
         train_index[key] = index
 
