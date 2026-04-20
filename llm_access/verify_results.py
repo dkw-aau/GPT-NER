@@ -159,6 +159,7 @@ def construct_results(gpt_results, entity_index, prompts_num, verify_results):
 
 def write_file(labels, dir_, last_name):
     print("writing ...")
+    os.makedirs(dir_, exist_ok=True)
     file_name = os.path.join(dir_, last_name)
     file = open(file_name, "w")
     for line in labels:

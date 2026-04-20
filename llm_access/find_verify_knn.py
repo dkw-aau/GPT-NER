@@ -176,6 +176,7 @@ def find_knn(mrc_training_set, training_word_features, gpt3_results, test_senten
     return knn_results
 
 def write_file(file_name, data):
+    os.makedirs(os.path.dirname(file_name), exist_ok=True)
     file = open(file_name, "w")
     for item in data:
         file.write(json.dumps(item, ensure_ascii=False).strip()+'\n')

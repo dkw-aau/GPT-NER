@@ -122,6 +122,7 @@ def ner_access(llm_provider: LLMProvider, ner_pairs, batch=16):
 
 def write_file(labels, dir_, last_name):
     print("writing ...")
+    os.makedirs(dir_, exist_ok=True)
     file_name = os.path.join(dir_, last_name)
     file = open(file_name, "w")
     for line in labels:
