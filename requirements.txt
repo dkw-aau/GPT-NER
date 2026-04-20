@@ -6,6 +6,7 @@ faiss-cpu
 numpy
 scikit-learn
 torch
+transformers
 tqdm
 text2vec
 python-json-logger
