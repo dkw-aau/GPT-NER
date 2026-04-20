@@ -57,7 +57,11 @@ For the full NER dataset, we follow [MRC-NER](https://arxiv.org/pdf/1910.11476.p
 
 For sampled **100-dataset**, we have put them on the [Google Drive](https://drive.google.com/drive/folders/1ByoM4Bb_BRmvp_D28QGRxrxfxnQtYeQi?usp=share_link).
 
-[WIP] The sampled 100-dataset is now included in the `data` folder, and you can directly use it for testing.
+[WIP] A demo split of the sampled CoNLL 100-dataset is included in `data/conll_mrc/`:
+- `mrc-ner.train` – 70 sentences (280 items) used as the retrieval pool
+- `mrc-ner.test`  – 33 sentences (132 items) used as the query set
+
+Both files are derived from the same 103-sentence CoNLL sample. They are intended only for testing the end-to-end pipeline locally. For proper evaluation, download the full dataset from the Google Drive link above or the MRC-NER repository and replace these files.
 
 ### Few-shot Demonstrations Retrieval
 For sentence-level embeddings, run `openai_access/extract_mrc_knn.py`.
