@@ -197,8 +197,10 @@ temperature: 0.1
 max_tokens: 512
 top_p: 1
 huggingface:
-  task: text-generation
+  task: conversational
 ```
+
+> **Note:** `mistralai/Mistral-7B-Instruct-v0.2` (and most modern instruction-tuned models) are routed through the `conversational` task on the HuggingFace Inference API. Using `task: text-generation` with such models will result in an error like *"Model … is not supported for task text-generation"*. Use `task: conversational` for instruction/chat models and `task: text-generation` only for base (non-instruction) models.
 
 Export your HuggingFace token (required for gated models; optional for public ones) and run the script:
 

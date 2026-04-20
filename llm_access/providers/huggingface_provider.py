@@ -15,7 +15,10 @@ endpoint_url : str
     Custom inference endpoint URL.  Defaults to the public
     Inference API (``https://api-inference.huggingface.co``).
 task : str
-    Inference task.  Defaults to ``"text-generation"``.
+    Inference task.  Use ``"conversational"`` for instruction/chat models
+    (e.g. ``mistralai/Mistral-7B-Instruct-v0.2``, ``meta-llama/Meta-Llama-3-8B-Instruct``).
+    Use ``"text-generation"`` for base (non-instruction) models.
+    Defaults to ``"text-generation"``.
 """
 import os
 from typing import List, Tuple, Type
@@ -32,6 +35,8 @@ class HuggingFaceProvider(LLMProvider):
     dedicated Inference Endpoint.
     """
 
+    SUPPORTED_TASKS = ("text-generation", "conversational")
+
     def __init__(
         self,
         model: str,
@@ -41,6 +46,13 @@ class HuggingFaceProvider(LLMProvider):
         endpoint_url: str = None,
         task: str = "text-generation",
     ):
+        if task not in self.SUPPORTED_TASKS:
+            raise ValueError(
+                f"Unsupported HuggingFace task {task!r}. "
+                f"Supported tasks: {', '.join(self.SUPPORTED_TASKS)}. "
+                "Use 'conversational' for instruction/chat models and "
+                "'text-generation' for base models."
+            )
         super().__init__(temperature=temperature, max_tokens=max_tokens, top_p=top_p)
         self.model = model
         self.endpoint_url = endpoint_url
@@ -72,15 +84,28 @@ class HuggingFaceProvider(LLMProvider):
 
         results = []
         for prompt in prompt_list:
-            response = client.text_generation(
-                prompt=prompt,
-                temperature=max(self.temperature, 1e-2),  # HF rejects 0.0
-                max_new_tokens=self.max_tokens,
-                top_p=self.top_p,
-                do_sample=self.temperature > 0,
-            )
-            # InferenceClient.text_generation returns a str directly
-            results.append(response if isinstance(response, str) else response.generated_text)
+            if self.task == "conversational":
+                # Many instruction-tuned models (e.g. Mistral-7B-Instruct-v0.2)
+                # are only available under the "conversational" task on the HF
+                # Inference API.  Use chat_completion() and wrap the prompt as a
+                # user message.
+                response = client.chat_completion(
+                    messages=[{"role": "user", "content": prompt}],
+                    temperature=max(self.temperature, 1e-2),  # HF rejects 0.0
+                    max_tokens=self.max_tokens,
+                    top_p=self.top_p,
+                )
+                results.append(response.choices[0].message.content)
+            else:
+                response = client.text_generation(
+                    prompt=prompt,
+                    temperature=max(self.temperature, 1e-2),  # HF rejects 0.0
+                    max_new_tokens=self.max_tokens,
+                    top_p=self.top_p,
+                    do_sample=self.temperature > 0,
+                )
+                # InferenceClient.text_generation returns a str directly
+                results.append(response if isinstance(response, str) else response.generated_text)
 
         logger.info(
             msg="prompt_and_result",
